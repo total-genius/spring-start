@@ -11,7 +11,7 @@ spring:
       maximum-pool-size: 10 # (настраиваемый параметр пула)
   jpa:
     hibernate:
-      ddl-auto: create-drop # Опция создания/обновления схемы (может быть 'none', 'validate', 'update', 'create', 'create-drop')
+      ddl-auto: update # Опция создания/обновления схемы (может быть 'none', 'validate', 'update', 'create', 'create-drop')
     show-sql: true # Показывает SQL-запросы в консоли
     properties:
       hibernate:

@@ -1,26 +1,25 @@
 package com.angubaidullin.dto;
 
 import com.angubaidullin.entity.Account;
-import com.angubaidullin.entity.Bill;
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class AccountResponseDTO {
+public class AccountResponseAdminDTO {
     private Long id;
     private String name;
     private String email;
-    private List<Bill> bills;
+    private Set<String> roles;
 
-    public AccountResponseDTO(Account account) {
+    public AccountResponseAdminDTO(Account account) {
         this.id = account.getId();
         this.name = account.getName();
         this.email = account.getEmail();
-        this.bills = account.getBills();
+        this.roles = account.getRoles();
     }
 }
