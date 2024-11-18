@@ -17,3 +17,31 @@ spring:
       hibernate:
         format_sql: true # Форматирует SQL-запросы в логах
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  kafka:
+    bootstrap-servers: localhost:9092 # адрес сервера Kafka
+    consumer: # настройки подребителя
+      group-id: spring-app-group # Это имя группы потребителей. Все приложения, которые принадлежат к одной группе, делят сообщения между собой.
+      auto-offset-reset: earliest # Указывает, откуда начинать чтение сообщений в топике, если потребитель ранее не подключался: earliest: Читать с самого начала (все сообщения, которые есть).
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Это "переводчик", который помогает понять ключ сообщения. Здесь используется StringDeserializer, который переводит ключ из байтов в текст (строку).
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Это "переводчик", который помогает понять значение сообщения. StringDeserializer переводит значение из байтов в текст (строку).
+    producer: # настройки продюсера
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # Это "упаковщик", который превращает ключ сообщения в байты, чтобы Kafka могла его понять. Здесь используется StringSerializer, который упаковывает ключи в текстовый формат.
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer # Это "упаковщик", который превращает значение сообщения в байты. StringSerializer упаковывает значения в текстовый формат.
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 888642004818-re5nq1bajctgadec2j3gjnfs78rdvg8p.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - profile
+              - email
+            redirect-uri: http://localhost:8081/login/oauth2/code/google
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo

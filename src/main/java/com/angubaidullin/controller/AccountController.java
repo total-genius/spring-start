@@ -5,7 +5,6 @@ import com.angubaidullin.service.AccountService;
 import com.angubaidullin.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,40 +20,33 @@ public class AccountController {
     }
 
     //Информация об авторизованном пользователе (Админ, Юзер)
-    @GetMapping("account/info")
-    public AccountResponseAdminDTO getCurrentAccount() {
+    @GetMapping("/account/info")
+    public ResponseEntity<AccountResponseUserDTO> getCurrentAccount() {
         String currentUserEmail = SecurityUtils.getCurrentUserEmail();
         if (currentUserEmail == null) {
             throw new SecurityException("No authenticated user found");
         }
 
-        return accountService.getCurrentAccount(currentUserEmail);
-    }
-
-    //Регистрация пользователя
-    @PostMapping("/register")
-    public String register(@RequestBody AccountRegistrationDTO accountRegistrationDTO) {
-        accountService.register(accountRegistrationDTO);
-        return "Register successful";
+        return ResponseEntity.ok(accountService.getCurrentAccount(currentUserEmail));
     }
 
     //по пути /accounts/** доступ получает только пользователь с ролью ADMIN
     //Получение пользователя по id
-    @GetMapping("accounts/{id}")
-    public AccountResponseAdminDTO getAccountById(@PathVariable Long id) {
-        return accountService.findAccountById(id);
+    @GetMapping("/accounts/{id}")
+    public ResponseEntity<AccountResponseAdminDTO> getAccountById(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.findAccountById(id));
     }
 
     //Получение всех пользователей
-    @GetMapping("accounts")
-    public List<AccountResponseAdminDTO> getAll() {
-        return accountService.findAllAccounts();
+    @GetMapping("/accounts")
+    public ResponseEntity<List<AccountResponseAdminDTO>> getAll() {
+        return ResponseEntity.ok(accountService.findAllAccounts());
     }
 
     //Удаление пользователя по id
-    @DeleteMapping("accounts/{id}")
-    public AccountResponseAdminDTO deleteAccountById(@PathVariable Long id) {
-        return accountService.deleteAccount(id);
+    @DeleteMapping("/accounts/{id}")
+    public ResponseEntity<AccountResponseAdminDTO> deleteAccountById(@PathVariable Long id) {
+        return ResponseEntity.ok(accountService.deleteAccount(id));
     }
 
     //Обновление ролей пользователя (Админ)
@@ -89,7 +81,7 @@ public class AccountController {
     }
 
     @PostMapping("/app/util/create/all")
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     public List<AccountResponseAdminDTO> saveListOfAccounts(@RequestBody List<AccountCreateDTO> accountCreateDTOList) {
         return accountCreateDTOList.stream()
                 .map(accountCreateDTO -> accountService.createAccount(accountCreateDTO))
